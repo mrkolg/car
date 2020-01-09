@@ -11,10 +11,7 @@
 // if the project is on wp
 @import 'base/wp-reset';
 
-body{
-  min-height: 375px;
-  animation: day-night 100s linear infinite alternate;
-}
+
 #wrapper{
   overflow:hidden;
   position:relative;
@@ -24,12 +21,11 @@ body{
 .block{
   width: 100vw;
 }
-.sun-wap{
+.sun-wrap{
   position: absolute;
   top: 5vw;
   left: 0;
   display: flex;
-  animation: sun-moon 200s linear infinite;
   .block{
     text-align: right;
   }
@@ -38,11 +34,29 @@ body{
     vertical-align: top;
     position: relative; 
     right: 15vw;
-    background: #FFF8A7;
+    background: #fff8a7;
     max-width: 106px;
     max-height: 106px;
     width: 8vw;
     border-radius: 50%;
+    &:after{
+      content:"";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      animation: shine 7s linear infinite;
+      z-index: -1;
+      box-shadow: 0 0 40px #fff8a7, 0 0 90px #b9a018;
+    }
+  }
+  .moon{
+    &:after{
+      box-shadow: 0 0 20px #fff;
+      animation: none;
+    }
   }
 }
 .clouds{
@@ -156,7 +170,7 @@ body{
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 53%;
+    height: 52%;
     background:#9CC53B;
   }
   img{
@@ -203,7 +217,7 @@ body{
   bottom: 2.2vw;
   left: 0;
   animation: main-move 2s linear infinite;
-  background: #A08E8C;
+  background: #a08e8c;
   &:after{
     content:"";
     position: absolute;
@@ -211,7 +225,7 @@ body{
     left: 0;
     right: 0;
     height: 100%;
-    background:#9CC53B;
+    background:#9cc53b;
   }
   img{
     width: 100vw;
@@ -279,14 +293,11 @@ body{
 }
 
 @keyframes main-move {
+  0% {
+    transform: translateX(0);
+  }
   100% {
     transform: translateX(-100vw);
-  }
-}
-
-@keyframes sun-moon {
-  100% {
-    transform: translateX(-200vw);
   }
 }
 
@@ -352,15 +363,6 @@ body{
   }
 }
 
-@keyframes day-night {
-  0% {
-    background-color: #C2E9F8;
-  }
-  100% {
-    background-color: #000;
-  }
-}
-
 @keyframes rabbit {
   0%, 25%, 45%, 55%, 75%, 95%, 100% {
     transform: translateY(0);
@@ -386,4 +388,148 @@ body{
     transform: scale3d(1.15, 1.15, 1.15);
     opacity: 0;
   }
+}
+
+@keyframes shine {
+  0% {
+    transform: scale3d(0.75, 0.75, 0.75);
+  }
+  50% {
+    transform: scale3d(1, 1, 1);
+  }
+  100% {
+    transform: scale3d(0.75, 0.75, 0.75);
+  }
+}
+
+body{
+  min-height: 375px;
+  animation: day-night 188s linear infinite;
+}
+
+.stars-wrap{
+  animation: stars-show 188s linear infinite;
+}
+
+.sun-wrap{
+  animation: sun-moon 170s linear infinite;
+}
+
+@keyframes sun-moon {
+  0%{
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-200vw);
+  }
+}
+
+@keyframes day-night{
+  0%, 100% {
+    background: #c2e9f8;
+  }
+  30%, 70% {
+    background: #7786f7;
+  }
+  46%, 54% {
+    background: #000;
+  }
+}
+
+@keyframes stars-show {
+  0%, 100% {
+    opacity: 0;
+  }
+  30%, 70% {
+    opacity: 0;
+  }
+  46%, 54% {
+    opacity: 1;
+  }
+}
+
+@function stars($stars) {
+	$bxshadow: ();
+	@for $i from 1 to $stars {
+		$bxshadow: append($bxshadow, (random(2000) + 0px) (random(2000) + 0px) #fff, comma);
+	}
+	@return unquote($bxshadow);
+}
+
+$bxshadow-large: stars(300);
+$bxshadow-medium: stars(500);
+$bxshadow-small: stars(800);
+
+.stars.large {
+	height: 3px;
+	width: 3px;
+	background: transparent;
+	box-shadow: $bxshadow-large;
+	animation: blink-large 7s infinite;
+}
+.stars.medium {
+	height: 2px;
+	width: 2px;
+	background: transparent;
+	box-shadow: $bxshadow-medium;
+	animation: blink-medium 5s infinite;
+}
+.stars.small {
+	height: 1px;
+	width: 1px;
+	background: transparent;
+	box-shadow: $bxshadow-small;
+	animation: blink-small 3s infinite;
+}
+
+@keyframes blink-large {
+	0% {
+		box-shadow: $bxshadow-large;
+	}	
+	70% {
+		$colors: '#fff', 'transparent';
+		$stars: $bxshadow-large;
+		@for $i from 1 to length($stars) {
+			$star: set-nth(nth($stars, $i), 3, unquote(nth($colors, random(length($colors)))));
+			$stars: set-nth($stars, $i, $star);
+		}
+		box-shadow: $stars;
+	}
+	100% {
+		box-shadow: $bxshadow-large;
+	}
+}
+@keyframes blink-medium {
+	0% {
+		box-shadow: $bxshadow-medium;
+	}	
+	70% {
+		$colors: '#fff', 'transparent';
+		$stars: $bxshadow-medium;
+		@for $i from 1 to length($stars) {
+			$star: set-nth(nth($stars, $i), 3, unquote(nth($colors, random(length($colors)))));
+			$stars: set-nth($stars, $i, $star);
+		}
+		box-shadow: $stars;
+	}
+	100% {
+		box-shadow: $bxshadow-medium;
+	}
+}
+@keyframes blink-small {
+	0% {
+		box-shadow: $bxshadow-small;
+	}	
+	70% {
+		$colors: '#fff', 'transparent';
+		$stars: $bxshadow-small;
+		@for $i from 1 to length($stars) {
+			$star: set-nth(nth($stars, $i), 3, unquote(nth($colors, random(length($colors)))));
+			$stars: set-nth($stars, $i, $star);
+		}
+		box-shadow: $stars;
+	}
+	100% {
+		box-shadow: $bxshadow-small;
+	}
 }
